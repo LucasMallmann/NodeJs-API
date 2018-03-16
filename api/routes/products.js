@@ -9,7 +9,7 @@ const Product = require('../models/product');
 router.get('/', (req, res, next) => {
     Product.find()
         .exec()
-        .then((result) => {
+        .then(result => {
             console.log("From DB" + result)
             // Check if it returns any data
             if (result >= 0) {
