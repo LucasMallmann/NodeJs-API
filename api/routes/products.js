@@ -8,28 +8,38 @@ const Product = require('../models/product');
 // GET all products
 router.get('/', (req, res, next) => {
     Product.find()
+        .select('name price _id') // select fields that will return
         .exec()
         .then(result => {
-            console.log("From DB" + result)
-            // Check if it returns any data
-            if (result.length >= 0) {
-                res.status(200).json(result);
-            }
-            else{
-                res.status(404).json({
-                    'message': 'No entries found',
-                    result: result
-                });
-            }
+
+            // variavel que será retornada para o json
+            var response = {
+                count: result.length,
+
+                //fazendo um map da resposta antiga para a nova
+                products: result.map(individualResult => {
+                    return {
+                        name: individualResult.name,
+                        price: individualResult.price,
+                        _id: individualResult._id,
+
+                        // Metadados
+                        // Como obter uma informação mais detalhada sobre determinado produto
+                        request_detail: {
+                            type: 'GET',
+                            url: 'http://localhost/3000/products/' + individualResult._id
+                        }
+                    }
+                })
+            };
+
+            res.status(200).json(response);
         })
         .catch((err) => {
             res.status(500).json({
                 error: err
             });
         });
-    // res.status(200).json({
-    //     mensagem: 'Sucesso no GET!'
-    // });
 });
 
 // Rota para Post
@@ -44,10 +54,19 @@ router.post('/', function(req, res, next){
     product
         .save()
         .then((result) => {
-            console.log(result);
+            // console.log(result);
 			res.status(201).json({
-				messsage: "Handling POST requests to /products",
-				createdProduct: result
+				createdProduct: {
+                    name: res.name,
+                    price: res.price,
+                    _id: res._id,
+
+                    request:{
+                        type: 'GET',
+                        description: 'Detailed Description about the product you just created :)',
+                        url: 'http://localhost:3000/products/' + res._id
+                    }
+                }
 			});
         })
         .catch(err => {
@@ -63,12 +82,19 @@ router.post('/', function(req, res, next){
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
     Product.findById(id)
+        .select('name price _id')
         .exec()
         .then(result => {
-            console.log("From Database" + result);
 
 			if(result){
-				res.status(200).json(result);
+				res.status(200).json({
+                    product: result,
+                    request: {
+                        type: 'GET',
+                        description: 'Get All the Products',
+                        url: 'http://localhost:3000/products'
+                    }
+                });
 			}else{
 				res.status(404).json({
 					messsage: "No valid entry found for provided Id"
@@ -101,7 +127,15 @@ router.patch('/:productId', (req, res, next) => {
       .exec()
       .then(result => {
         console.log(result);
-        res.status(200).json(result);
+        res.status(200).json({
+            messsage: 'Product Updated',
+
+            request: {
+                type: 'GET',
+                description: 'Detailed information about the updated product',
+                url: 'http://localhost:3000/products/' + id
+            }
+        });
       })
       .catch(err => {
         console.log(err);
@@ -118,7 +152,15 @@ router.delete('/:productId', function(req, res, next) {
       .exec()
       .then(result => {
           console.log("Product Deleted from DB " + result);
-          res.status(200).json(result);
+          res.status(200).json({
+              messsage: 'Product Deleted',
+              request: {
+                  type: 'POST',
+                  description: 'You can create a new product here',
+                  url: 'http://localhost:3000/products/',
+                  data: { name:'String', price:'Number' }
+              }
+          });
       })
       .catch(err => {
           res.status(500).json({
