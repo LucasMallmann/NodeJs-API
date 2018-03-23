@@ -12,12 +12,13 @@ router.get('/', (req, res, next) => {
         .then(result => {
             console.log("From DB" + result)
             // Check if it returns any data
-            if (result >= 0) {
+            if (result.length >= 0) {
                 res.status(200).json(result);
             }
             else{
                 res.status(404).json({
-                    'message': 'No entries found'
+                    'message': 'No entries found',
+                    result: result
                 });
             }
         })
@@ -26,6 +27,9 @@ router.get('/', (req, res, next) => {
                 error: err
             });
         });
+    // res.status(200).json({
+    //     mensagem: 'Sucesso no GET!'
+    // });
 });
 
 // Rota para Post
