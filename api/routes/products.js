@@ -27,7 +27,7 @@ router.get('/', (req, res, next) => {
                         // Como obter uma informação mais detalhada sobre determinado produto
                         request_detail: {
                             type: 'GET',
-                            url: 'http://localhost/3000/products/' + individualResult._id
+                            url: 'http://localhost:3000/products/' + individualResult._id
                         }
                     }
                 })
