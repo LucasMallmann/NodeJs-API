@@ -4,6 +4,8 @@ const router = express.Router();
 const mongoose = require('mongoose');
 
 const Order = require('../models/order');
+const Product = require('../models/product');
+
 
 // GEt
 router.get('/', (req, res, next) => {
@@ -40,14 +42,22 @@ router.get('/', (req, res, next) => {
 
 // Post
 router.post('/', (req, res, next) => {
-    const order = new Order({
-        _id: mongoose.Types.ObjectId(),
-        quantity: req.body.quantity,
-        product: req.body.productId
-    });
-    order
-        .save()
-        // .exec()
+    // checar para ver se existe o id do produto que ele quer salvar o pedido
+    Product.findById(req.body.productId)
+        .then(product => {
+            if(!product){
+                return res.status(404).json({
+                    message: 'Product Not Found'
+                });
+            }
+
+            const order = new Order({
+                _id: mongoose.Types.ObjectId(),
+                quantity: req.body.quantity,
+                product: req.body.productId
+            });
+            return order.save() // retorna uma promessa
+        })
         .then(result => {
             res.status(201).json({
                 message: 'Order stored',
@@ -66,8 +76,10 @@ router.post('/', (req, res, next) => {
             res.status(500).json({
                 error: err
             });
-        });
-    // res.status(201).json({
+        });    
+
+
+        // res.status(201).json({
     //     message: 'Order was created',
     //     order: order
     // });
