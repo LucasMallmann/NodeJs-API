@@ -44,6 +44,7 @@ router.get('/', (req, res, next) => {
 
 // Rota para Post
 router.post('/', function(req, res, next){
+
     var product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
