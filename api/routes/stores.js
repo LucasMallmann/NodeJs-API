@@ -5,7 +5,15 @@ const Store = require('../models/store');
 // const Geo = require('../models/store/')
 
 router.get('/', (req, res, next) => {
-
+	Store.aggregate().near({
+		near: {
+			'type': 'Point',
+			'coordinates': [parseFloat(req.query.lng), parseFloat(req.query.lat)]
+		},
+		maxDistance: 100000,
+		spherical: true,
+		distanceField: "dist.calculated"
+	});
 });
 
 router.post('/', function(req, res, next){
