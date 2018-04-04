@@ -3,6 +3,9 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Product = require('../models/product');
 
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
+
 // configurar a rota.
 // Isso é como se fosse uma subrota, que irá acionar quando bater /products
 // GET all products
@@ -43,8 +46,8 @@ router.get('/', (req, res, next) => {
 });
 
 // Rota para Post
-router.post('/', function(req, res, next){
-
+router.post('/', upload.single('productImage'), (req, res, next) => {
+    console.log(req.file);
     var product = new Product({
         _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
