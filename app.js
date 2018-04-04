@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
+const storeRoutes = require('./api/routes/stores');
 
 app.use(morgan('dev'));
 
@@ -39,6 +40,7 @@ app.use(bodyParser.json());
 // Routes that handle requests
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
+app.use('/stores', storeRoutes);
 
 // // Connect to Mongoose
 // mongoose.connect(

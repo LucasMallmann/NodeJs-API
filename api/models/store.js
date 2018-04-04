@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 // create geoLocation Schema
-const geoSchema = new Schema({
+const geoSchema = mongoose.Schema({
 	type: {
 		type: String, // type of data
 		default: "Point"
@@ -15,7 +15,7 @@ const geoSchema = new Schema({
 });
 
 
-const storeSchema = new Schema({
+const storeSchema = mongoose.Schema({
 	_id: mongoose.Schema.Types.ObjectId,
 	name: { 
 		type: String, 
@@ -35,5 +35,8 @@ const storeSchema = new Schema({
 	// add geoJson
 	// Put a GeoJson Schema here
 	geometry: geoSchema
-	
+
 });
+
+module.exports = mongoose.model('Store', storeSchema);
+// module.exports = mongoose.model('Geo', geoSchema);
