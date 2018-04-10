@@ -13,7 +13,14 @@ router.get('/', (req, res, next) => {
 		maxDistance: 100000,
 		spherical: true,
 		distanceField: "dist.calculated"
-	});
+	})
+		.then(stores => {
+			res.status(200).json(stores);
+			// res.send(stores);
+		})
+		.catch(err => {
+			error: err
+		});
 });
 
 router.post('/', function(req, res, next){

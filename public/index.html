@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <!-- <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"> -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat|Open+Sans" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div class="title">
+        <h1>Rest Api - Procure por uma loja :)</h1>
+    </div>
+
+    <div id="homepage">
+
+        <h1 class="search">Procure por uma loja em sua área</h1>
+
+        <div id="stores">
+        </div>
+    </div>
+
+    
+
+
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://unpkg.com/react@15/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@15/dist/react-dom.min.js"></script>
+
+    <!-- Create react component -->
+    <script type="text/babel">
+
+      var Stores = React.createClass({
+				getInitialState: function(){
+					return({
+						stores: []
+					});	
+				},
+
+    		render: function(){
+					var stores = this.state.stores;
+					console.log(stores);
+					stores = stores.map(function(store, index){
+						return(
+							<li key={index}>
+								<span className={store.obj.open}></span>
+								<span className="name">{store.obj.name}</span>
+								<span className="slogan">{store.obj.slogan}</span>
+								<span className="rank">{store.obj.rank}</span>	
+								<span className="dist">{Math.floor(store.dis / 1000)} km</span>
+							</li>
+						);
+					});
+
+			return(
+          	<div id="store-container">
+            <form id="search" onSubmit={this.handleSubmit}>
+				<label>Digite sua latitude</label>
+				<input type="text" id="txtLat" ref="lat" placeholder="latitude" required/>
+				<label>Digite sua longitude</label>
+				<input type="text" ref="lng" placeholder="longitude" required/>
+
+				<input type="submit" value="Buscar"/>	
+			</form>		
+			<ul>{stores}</ul>
+
+        	</div>
+        	);
+			console.log(document.getElementById("txtLat"));
+			},
+				
+				handleSubmit: function(e){
+					e.preventDefault();
+					var lng = this.refs.lng.value;
+					var lat = this.refs.lat.value;
+
+					fetch('/api/stores?lng=' + lng + '&lat=' + lat)
+						.then(data => {
+							return data.json();
+						}).then(json => {
+							this.setState({
+								stores: json
+							});
+						});
+
+				}
+
+			});
+			
+			ReactDOM.render(<Stores/>, document.getElementById('stores'));
+
+    </script>
+
+</body>
+</html>

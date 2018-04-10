@@ -1,0 +1,38 @@
+body{
+    font-family: 'Montserrat', sans-serif;
+    color: #555;
+    background: #eee;
+    margin: 10px 30px;
+}
+
+.title{
+    /* margin: auto 10px; */
+    text-align: center;
+    margin: 30px 0;
+}
+
+.title h1{
+    font-size: 40px;
+    color: rgba(0, 0, 0, 0.7);
+}
+
+.search{
+    text-align: center;
+    margin: 60px 0;
+}
+
+#store-container{
+    background: lightblue;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 50px;
+}
+
+#store-container label{
+    font-size: 22px;
+}
+
+#store-container input{
+    display: inline-block;
+    float: left;
+}

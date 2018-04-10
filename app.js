@@ -16,6 +16,9 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+// serve static file
+app.use(express.static('public'));
+
 
 // Handle the CORS (Cross Origin Resource Sharing) errors. 
 // The CORS errors are the ones that don't allow you to 
