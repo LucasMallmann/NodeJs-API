@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 
 // serve static file
 app.use(express.static('public'));
+app.use('/uploads', express.static('uploads')); // access the private folder uploads.
 
 
 // Handle the CORS (Cross Origin Resource Sharing) errors. 
