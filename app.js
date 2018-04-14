@@ -8,6 +8,7 @@ const mongoose = require('mongoose');
 const productRoutes = require('./api/routes/products');
 const orderRoutes = require('./api/routes/orders');
 const storeRoutes = require('./api/routes/stores');
+const userRoutes = require('./api/routes/users');
 
 app.use(morgan('dev'));
 
@@ -45,6 +46,7 @@ app.use('/uploads', express.static('uploads')); // access the private folder upl
 app.use('/products', productRoutes);
 app.use('/orders', orderRoutes);
 app.use('/stores', storeRoutes);
+app.use('/users', userRoutes);
 
 // // Connect to Mongoose
 // mongoose.connect(
