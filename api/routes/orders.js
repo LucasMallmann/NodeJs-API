@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
         .select('product quantity _id')
 				
 				// selecionando o produto para aparecer aqui nesse get tbm
-				// meio que fazer um merge
+				// meio que fazer um merge com a outra collection
 				.populate('product', 'name')
 				.exec()
         .then(docs => {

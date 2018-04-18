@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const Product = require('../models/product');
 
 const multer = require('multer');
-
+const checkAuth  = require('../middleware/check-auth');
 
 // config about how the file will be stored
 const storage = multer.diskStorage({
@@ -80,7 +80,8 @@ router.get('/', (req, res, next) => {
 });
 
 // Rota para Post
-router.post('/', upload.single('productImage'), (req, res, next) => {
+// Vou chamar o meu middleware para checar e validar o Token, o checkAuth
+router.post('/', upload.single('productImage'), checkAuth, (req, res, next) => {
     console.log(req.file);
     var product = new Product({
         _id: new mongoose.Types.ObjectId(),

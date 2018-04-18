@@ -91,7 +91,7 @@ router.get('/', (req, res, next) => {
 
 // Login users
 router.post('/login', (req, res, next) => {
-	User.find({email: req.body.email})
+	User.find({email: req.body.email}) // return a list of user...but it is only 1 user
 	  .exec()
 	  .then(users => {
 		  if(users.length < 1){
@@ -115,9 +115,10 @@ router.post('/login', (req, res, next) => {
 				console.log(users);
 				// Json Web Token to the client
 				// The first argument is the data we want to pass to the client
+				// In this case, it will be the email and the id
 				const token = jwt.sign({
-					email: user[0].email,
-					userId: user[0]._id 
+					email: users[0].email,
+					userId: users[0]._id 
 				}, process.env.JWT_KEY, 
 				{
 					// options of the jwt_key
@@ -127,7 +128,7 @@ router.post('/login', (req, res, next) => {
 				
 				return res.status(200).json({
 					message: 'Auth success',
-					token = token1
+					token: token
 				});
 			}
 
