@@ -4,6 +4,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // don't need a logout route
 router.post('/signup', (req, res, next) =>{
@@ -80,9 +81,66 @@ router.get('/', (req, res, next) => {
 			res.status(200).json(response);
 
 		})
-		.catch();
+		.catch(err => {
+			res.status(500).json({
+				error: err
+			});
+		});
 });
 
+
+// Login users
+router.post('/login', (req, res, next) => {
+	User.find({email: req.body.email})
+	  .exec()
+	  .then(users => {
+		  if(users.length < 1){
+			  return res.status(401).json({
+				  message: 'Auth failed'
+			  });
+		  }
+
+		//   console.log(users);
+
+		  // compare the hashes between the passwords
+		  bcrypt.compare(req.body.password, users[0].password, (err, success) =>{
+			// if compare is wrong
+			if (err) {
+				return res.status(401).json({
+					message: 'Auth failed'
+				});	
+			}
+			// if compare is success
+			if (success) {
+				console.log(users);
+				// Json Web Token to the client
+				// The first argument is the data we want to pass to the client
+				const token = jwt.sign({
+					email: user[0].email,
+					userId: user[0]._id 
+				}, process.env.JWT_KEY, 
+				{
+					// options of the jwt_key
+					// define the duration
+					expiresIn: "1hr"
+				});
+				
+				return res.status(200).json({
+					message: 'Auth success',
+					token = token1
+				});
+			}
+
+			return res.status(401).json({
+				message: 'Auth failed'
+			});	
+
+		  });
+	  })
+	  .catch(function(err){
+		  error: err
+	  });
+});
 
 // delete
 router.delete('/:_userId', (req, res, next) => {
