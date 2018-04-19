@@ -81,7 +81,7 @@ router.get('/', (req, res, next) => {
 
 // Rota para Post
 // Vou chamar o meu middleware para checar e validar o Token, o checkAuth
-router.post('/', upload.single('productImage'), checkAuth, (req, res, next) => {
+router.post('/', checkAuth, upload.single('productImage'), (req, res, next) => {
     console.log(req.file);
     var product = new Product({
         _id: new mongoose.Types.ObjectId(),
@@ -107,7 +107,7 @@ router.post('/', upload.single('productImage'), checkAuth, (req, res, next) => {
                 request:{
                     type: 'GET',
                     description: 'Detailed Description about the product you just created :)',
-                    url: 'http://localhost:3000/products/' + res._id
+                    url: 'http://localhost:3000/products/' + result._id
                 }
             }
         });
@@ -155,7 +155,8 @@ router.get('/:productId', (req, res, next) => {
 });
 
 // Update a product
-router.patch('/:productId', (req, res, next) => {
+// Adicionado autorização de Token de Login - Middleware
+router.patch('/:productId', checkAuth, (req, res, next) => {
     var id = req.params.productId;
     // Store the things that you want to update
     var updateOps = {};
@@ -189,7 +190,7 @@ router.patch('/:productId', (req, res, next) => {
 });
 
 // Delete a product using the id
-router.delete('/:productId', function(req, res, next) {
+router.delete('/:productId', checkAuth,function(req, res, next) {
     var id = req.params.productId;
     Product.remove({_id: id})
       .exec()
